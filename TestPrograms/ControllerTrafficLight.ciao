@@ -1,4 +1,4 @@
-ciao TrafficLightProg
+ciao TrafficLightController
     class TrafficLight
         events
             switch

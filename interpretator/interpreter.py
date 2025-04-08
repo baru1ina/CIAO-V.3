@@ -52,8 +52,8 @@ class Interpreter:
         self.classInitialization()
         self.stateTable = self.getStateTable()
 
-        for clas in list(self.stateTable.keys()):
-            print_table(self.stateTable[clas][1:], self.stateTable[clas][0])
+        # for clas in list(self.stateTable.keys()):
+        #     print_table(self.stateTable[clas][1:], self.stateTable[clas][0])
 
         # init scheme
         self.objects = {}
@@ -371,6 +371,8 @@ class Interpreter:
                 obj_assert = parts[0]
                 assertion = parts[1]
                 break
+        if not assertion:
+            return not self.objects[obj].condition[condition]
 
         assert_ = self.objects[obj_assert].assertion[assertion]
         # нужно будет добавить проверку и других утверждений
