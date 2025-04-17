@@ -40,7 +40,7 @@ class Interpreter:
             if "assertions" in classInfo:
                 self.assertion = classInfo["assertions"]
 
-    def __init__(self, ast):
+    def __init__(self, ast, maxDepth):
         self.table_code = GetTable(ast)
 
         # init classes
@@ -64,6 +64,9 @@ class Interpreter:
         self.initObject()
         self.initLink()
         self.initInterface()
+        self.maxDepth = maxDepth
+        self.currentDepth = 0
+        self.isLimitedTime = False
 
     def classInitialization(self):
         for clas in list(self.table_code["classes"].keys()):
@@ -421,6 +424,12 @@ class Interpreter:
                   f"- выполнено")
 
     def interpret(self, interface, isUser):
+        self.currentDepth += 1
+        if self.currentDepth > self.maxDepth:
+            print("Превышено времы исполнения программы")
+            self.isLimitedTime = True
+            return
+
         if hasattr(self, 'timer') and self.timer.is_active():
             obj_part = interface.split('.')[0]
             if interface in self._current_stop_commands:
@@ -649,6 +658,8 @@ class Interpreter:
             self.available_commands()
             return True
         self.interpret(command, True)
+        if self.isLimitedTime:
+            return False
         return True
 
 
@@ -657,7 +668,8 @@ def InterpretCode(ast):
         # print("\nПостроение таблиц...")
         print("\nЗапуск интерпретатора...\n")
         print("Команда: " + Fore.GREEN + "help" + Fore.RESET + " - показать список команд\n")
-        inter = Interpreter(ast)
+        maxDepth = 120
+        inter = Interpreter(ast, maxDepth)
         if not inter.validation():
             return
 

@@ -15,7 +15,7 @@ ciao InterpreterCIAO
 		    p:String
 		states
 		    start -> set(a,e,p)/tick(a,e,p) -> ready
-		    ready -> tick(a,e,p) [isEnd]/tick(a,e,p) -> ready
+		    ready -> tick(a,e,p) [!isEnd]/tick(a,e,p) -> ready
 		            [else] / trigger_stop -> stop
 		    stop -> restart -> start
     scheme
